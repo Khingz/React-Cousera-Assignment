@@ -1,10 +1,15 @@
 import React from 'react';
+import { Navbar, NavbarBrand } from 'reactstrap';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <h4>INITIAL SETUP</h4>
+      <Navbar dark color='primary'>
+        <div className='container'>
+          <NavbarBrand href='/'>Khingz Cushion</NavbarBrand>
+        </div>
+      </Navbar>
     </div>
   );
 }
