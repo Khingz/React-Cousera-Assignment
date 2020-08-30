@@ -1,7 +1,8 @@
 import React, { Component} from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
 import Menu from './MenuComponent';
 import DishDetails from './DishDetails';
+import Header from './HeaderComponent';
+import Footer from './FooterComponent';
 import { DISHES } from '../shared/dishes';
 
 class Main extends Component {
@@ -12,13 +13,14 @@ class Main extends Component {
       dishes: DISHES,
       selectedDish: null
     };
-
   }
 
   onDishSelect(dishId) {
     this.setState({
         selectedDish: dishId
     })
+    console.log(this.state.selectedDish);
+
 }
 
 renderDish(dish) {
@@ -37,15 +39,12 @@ renderDish(dish) {
   render() {
     return (
       <div className="App">
-        <Navbar dark color='primary'>
-          <div className='container'>
-            <NavbarBrand href='/'>Khingz Cushion</NavbarBrand>
-          </div>
-        </Navbar>
+        <Header />
         <Menu dishes = {this.state.dishes} onClick={dishId => this.onDishSelect(dishId)}/>
         <div>
             {this.renderDish(this.state.selectedDish)}
         </div>
+        <Footer />
       </div>
     );
   }
