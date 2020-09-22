@@ -26,10 +26,10 @@ class Contact extends Component {
             
     };
 
-    handleSubmit(event) {
-        console.log('Current State is: ' + JSON.stringify(this.state));
-        alert('Current State is: ' + JSON.stringify(this.state));
-        event.preventDefault();
+    handleSubmit(value) {
+        console.log('Current State is: ' + JSON.stringify(value));
+        alert('Current State is: ' + JSON.stringify(value));
+        // event.preventDefault();
     }
 
     render() {
