@@ -8,6 +8,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { addComment, fetchDishes } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
   return {
@@ -18,35 +19,44 @@ const mapStateToProps = state => {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  addComment: (dishid, rating, author, comment) => dispatch(addComment(dishid, rating, author, comment)),
+  fetchDishes: () => (dispatch(fetchDishes()))
+})
+
 class Main extends Component {
   constructor(props) {
     super(props);
   }
 
-renderDish(dish) {
-    if (dish !== null) {
-        return (
-            <DishDetails dish={this.props.dishes.filter(dish => dish.id === this.props.selectedDish)[0]} />
-        )
-    } else {
-        return (
-            <div></div>
-        )
-    }
-}
+  componentDidMount() {
+    this.props.fetchDishes()
+  }
+
+// renderDish(dish) {
+//     if (dish !== null) {
+//         return (
+//             <DishDetails dish={this.props.dishes.filter(dish => dish.id === this.props.selectedDish)[0]} />
+//         )
+//     } else {
+//         return (
+//             <div></div>
+//         )
+//     }
+// }
 
 
   render() {
 
     const HomePage = () => {
       return (
-        <Home dish={this.props.dishes.filter(dish => dish.featured)[0]} promotion={this.props.promotions.filter(promotion => promotion.featured)[0]} dish={this.props.dishes.filter(dish => dish.featured)[0]} leader={this.props.leaders.filter(leader => leader.featured)[0]}/>
+        <Home dish={this.props.dishes.dishes.filter(dish => dish.featured)[0]} dishesLoading={this.props.dishes.isLoading} dishesErrMess={this.props.dishes.errMess} promotion={this.props.promotions.filter(promotion => promotion.featured)[0]} dish={this.props.dishes.dishes.filter(dish => dish.featured)[0]} leader={this.props.leaders.filter(leader => leader.featured)[0]}/>
       )
     }
 
     const DishWithId = ({ match }) => {
       return (
-        <DishDetails dish={this.props.dishes.filter(dish => dish.id === parseInt(match.params.dishId, 10))[0]} comments={this.props.comments.filter(comment => comment.dishId === parseInt(match.params.dishId, 10))}/>
+        <DishDetails dish={this.props.dishes.dishes.filter(dish => dish.id === parseInt(match.params.dishId, 10))[0]} isLoading={this.props.dishes.isLoading} errMess={this.props.dishes.errMess} comments={this.props.comments.filter(comment => comment.dishId === parseInt(match.params.dishId, 10))} addComment={this.props.addComment}/>
       )
     }
   
@@ -61,10 +71,6 @@ renderDish(dish) {
           <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
           <Redirect to='/home' />
         </Switch>
-        {/* <Menu dishes = {this.props.dishes} onClick={dishId => this.onDishSelect(dishId)}/>
-        <div>
-            {this.renderDish(this.props.selectedDish)}
-        </div> */}
         <Footer />
       </div>
     );
@@ -72,4 +78,4 @@ renderDish(dish) {
   
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
