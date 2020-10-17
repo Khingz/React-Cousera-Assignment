@@ -8,7 +8,8 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addComment, fetchDishes } from '../redux/ActionCreators';
+import { postComment, fetchDishes, fetchComments, fetchPromos  } from '../redux/ActionCreators';
+import { Transition, CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const mapStateToProps = state => {
   return {
@@ -20,8 +21,12 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (dishid, rating, author, comment) => dispatch(addComment(dishid, rating, author, comment)),
-  fetchDishes: () => (dispatch(fetchDishes()))
+  postComment: (dishid, rating, author, comment) => dispatch(postComment(dishid, rating, author, comment)),
+  fetchDishes: () => (dispatch(fetchDishes())),
+  fetchComments: () => (dispatch(fetchComments())),
+  fetchPromos: () => (dispatch(fetchPromos()))
+
+
 })
 
 class Main extends Component {
@@ -30,7 +35,9 @@ class Main extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchDishes()
+    this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
   }
 
 // renderDish(dish) {
@@ -50,27 +57,32 @@ class Main extends Component {
 
     const HomePage = () => {
       return (
-        <Home dish={this.props.dishes.dishes.filter(dish => dish.featured)[0]} dishesLoading={this.props.dishes.isLoading} dishesErrMess={this.props.dishes.errMess} promotion={this.props.promotions.filter(promotion => promotion.featured)[0]} dish={this.props.dishes.dishes.filter(dish => dish.featured)[0]} leader={this.props.leaders.filter(leader => leader.featured)[0]}/>
+        <Home dish={this.props.dishes.dishes.filter(dish => dish.featured)[0]} dishesLoading={this.props.dishes.isLoading} dishesErrMess={this.props.dishes.errMess} promotion={this.props.promotions.promotions.filter(promo => promo.featured)[0]} promosLoading={this.props.promotions.isLoading} promosErrMess={this.props.promotions.errMess} leader={this.props.leaders.filter(leader => leader.featured)[0]}/>
       )
     }
 
     const DishWithId = ({ match }) => {
       return (
-        <DishDetails dish={this.props.dishes.dishes.filter(dish => dish.id === parseInt(match.params.dishId, 10))[0]} isLoading={this.props.dishes.isLoading} errMess={this.props.dishes.errMess} comments={this.props.comments.filter(comment => comment.dishId === parseInt(match.params.dishId, 10))} addComment={this.props.addComment}/>
+        <DishDetails dish={this.props.dishes.dishes.filter(dish => dish.id === parseInt(match.params.dishId, 10))[0]} isLoading={this.props.dishes.isLoading} errMess={this.props.dishes.errMess} comments={this.props.comments.comments.filter(comment => comment.dishId === parseInt(match.params.dishId, 10))} commentsErrMess={this.props.comments.errMess} postComment={this.props.postComment}/>
       )
     }
   
     return (
       <div className="App">
         <Header />
-        <Switch>
-          <Route path='/home' component={HomePage} />
-          <Route exact path='/menu' component={() => <Menu dishes = {this.props.dishes}/> } />
-          <Route path='/menu/:dishId' component={DishWithId} />
-          <Route exact path='/contactus' component={Contact} />
-          <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
-          <Redirect to='/home' />
-        </Switch>
+        <TransitionGroup>
+          <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
+            <Switch>
+              <Route path='/home' component={HomePage} />
+              <Route exact path='/menu' component={() => <Menu dishes = {this.props.dishes}/> } />
+              <Route path='/menu/:dishId' component={DishWithId} />
+              <Route exact path='/contactus' component={Contact} />
+              <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
+              <Redirect to='/home' />
+            </Switch>
+          </CSSTransition>
+        </TransitionGroup>
+        
         <Footer />
       </div>
     );
