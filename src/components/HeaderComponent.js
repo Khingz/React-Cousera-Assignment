@@ -8,7 +8,6 @@ class Header extends Component {
         super(props);
         this.state = {
             isNavOpen: false,
-            isNavOpen: false,
             isModalOpen: false
         }
 

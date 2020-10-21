@@ -27,9 +27,11 @@ class Contact extends Component {
     };
 
     handleSubmit(value) {
-        console.log('Current State is: ' + JSON.stringify(value));
-        alert('Current State is: ' + JSON.stringify(value));
+        // console.log('Current State is: ' + JSON.stringify(value));
+        // alert('Current State is: ' + JSON.stringify(value));
         // event.preventDefault();
+        this.props.postFeedback(this.props.feedbackId, value.firstname, value.lastname, value.telnum, value.email, value.agree, value.contactType, value.message);
+
     }
 
     render() {
@@ -74,7 +76,7 @@ class Contact extends Component {
                     <div className="col-12 col-sm-11 offset-sm-1">
                         <div className="btn-group" role="group">
                             <a role="button" className="btn btn-primary" href="tel:+85212345678"><i className="fa fa-phone"></i> Call</a>
-                            <a role="button" className="btn btn-info"><i className="fa fa-skype"></i> Skype</a>
+                            <a role="button" className="btn btn-info" href="twitter.com"><i className="fa fa-skype"></i> Skype</a>
                             <a role="button" className="btn btn-success" href="mailto:confusion@food.net"><i className="fa fa-envelope-o"></i> Email</a>
                         </div>
                     </div>
@@ -85,7 +87,7 @@ class Contact extends Component {
                       <h3>Send us your Feedback</h3>
                    </div>
                     <div className="col-12 col-md-9">
-                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                    <LocalForm onSubmit={(value) => this.handleSubmit(value)}>
                             <Row className="form-group">
                                 <Label htmlFor="firstname" md={2}>First Name</Label>
                                 <Col md={10}>
